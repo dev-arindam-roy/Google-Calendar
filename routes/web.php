@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Google\CalendarBookingEvent;
+use App\Http\Controllers\Google\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,9 @@ Route::prefix('google-calendar')->group(function () {
         });
     });
 });
+
+
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.auth');
+Route::get('/oauth2callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::post('/calendar/create', [GoogleController::class, 'createCalendarEvent'])->name('calendar.create');
+
