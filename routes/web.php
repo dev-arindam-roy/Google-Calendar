@@ -24,12 +24,10 @@ Route::prefix('google-calendar')->group(function () {
         Route::controller(CalendarBookingEvent::class)->group(function () {
             Route::get('/event-service', 'index')->name('event-service');
             Route::post('/create-event-service', 'createEventService')->name('create-event-service');
+
+            Route::get('/quick-event', 'quickEvent')->name('quick-event');
+            Route::post('/create-quick-event', 'createQuickEvent')->name('create-quick-event');
         });
     });
 });
-
-
-Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.auth');
-Route::get('/oauth2callback', [GoogleController::class, 'handleGoogleCallback']);
-Route::post('/calendar/create', [GoogleController::class, 'createCalendarEvent'])->name('calendar.create');
 

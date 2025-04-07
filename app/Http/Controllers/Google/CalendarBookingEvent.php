@@ -9,10 +9,19 @@ use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Google_Service_Calendar_FreeBusyRequest;
 use Google\Service\Calendar;
+//use Google\Service\Calendar as GoogleCalendar;
 use Spatie\GoogleCalendar\Event;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Exception;
+
+use Google\Service\Calendar\Event as GoogleCalendarEvent;
+use Google\Service\Calendar\EventDateTime;
+use Google\Service\Calendar\EventAttendee;
+use Google\Service\Calendar\ConferenceData;
+use Google\Service\Calendar\ConferenceDataCreateRequest;
+use Google\Service\Calendar\ConferenceSolutionKey;
+
 
 class CalendarBookingEvent extends Controller
 {
@@ -41,7 +50,7 @@ class CalendarBookingEvent extends Controller
         $dataBag['upcoming_booking'] = $upcomingSchedules;
         
         //dd($dataBag);
-        return view('google-calendar.event-booking-service.index2', $dataBag);
+        return view('google-calendar.event-booking-service.index', $dataBag);
         
     }
 
@@ -249,6 +258,83 @@ class CalendarBookingEvent extends Controller
         
         $color = $googleCalendarColors[array_rand($googleCalendarColors)];
         return $color['id'] ?? 6;
+    }
+
+
+    /***
+     * https://github.com/spatie/laravel-google-calendar
+     */
+
+    public function quickEvent(Request $request)
+    {
+        $dataBag = [];
+        return view('google-calendar.quick-event.index', $dataBag);
+    }
+
+    public function createQuickEvent(Request $request)
+    {
+//         $requestData = $request->all();
+
+//         $date = $requestData['date'] ?? Carbon::now()->format('m-d-Y');
+//         $time = $requestData['time'] ?? Carbon::now()->addHours(2)->format('h:i A');
+//         $usingDateFormat = $requestData['using_date_format'] ?? 'Y-m-d';
+
+//         try {
+//             if ($usingDateFormat === 'mm-dd-yy') {
+//                 $dateFormatted = Carbon::createFromFormat('m-d-Y', $date)->format('Y-m-d');
+//             } else {
+//                 $dateFormatted = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
+//             }
+//         } catch (Exception $e) {
+//             return response()->json([
+//                 'isSuccess' => false,
+//                 'message' => 'Invalid date format',
+//                 'error' => $e->getMessage()
+//             ], 400);
+//         }
+
+//         // Combine date + time
+//         $startDateTime = Carbon::parse($dateFormatted . ' ' . $time);
+//         $endDateTime = $startDateTime->copy()->addHour();
+
+//         $event = new Event;
+//         $event->name = 'Meeting with - ' . $requestData['name'];
+//         $event->description = $requestData['description'];
+//         $event->startDateTime = $startDateTime;
+//         $event->endDateTime = $endDateTime;
+//         $event->addAttendee(['email' => 'anotherEmail@gmail.com']);
+// $event->addMeetLink(); // optionally add a google meet link to the event
+//         $saveEvent = $event->save();
+
+//         return response()->json(['isSuccess' => true, 'message' => 'Your meeting has been scheduled successfully', 'data' => $saveEvent]);
+
+// $event = Event::create([
+//     'name' => 'Zoom Replacement Meeting',
+//     'description' => 'Planning meeting with live discussion',
+//     'startDateTime' => Carbon::parse('2025-04-10 14:00'),
+//     'endDateTime' => Carbon::parse('2025-04-10 15:00'),
+//     'attendees' => [
+//         ['email' => 'someone@example.com'],
+//     ],
+//     'colorId' => '5',
+//     'conferenceData' => [
+//         'createRequest' => [
+//             'requestId' => uniqid(),
+//             'conferenceSolutionKey' => [
+//                 'type' => 'hangoutsMeet',
+//             ]
+//         ]
+//     ],
+// ]);
+
+
+$event = new Event();
+
+$event->quickSave('Appointment at Somewhere on April 25 10am-10:25am');
+
+// statically
+Event::quickCreate('Appointment at Somewhere on April 25 10am-10:25am');
+
     }
 }
 
